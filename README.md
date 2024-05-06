@@ -20,9 +20,18 @@ The `phoenix-server-deploy` script is a powerful automation tool designed to str
 - SSH key-based authentication set up for the target Ubuntu server.
 - Properly configured server service and application directory paths in the script.
 
+## Environment File
+
+`deploy.env`
+```
+USERNAME=your_username
+KEY_PATH=path_to_your_private_key
+SERVER_ADDRESS=your.server.address
+```
+
 ## Usage
 
-1. Edit the script to specify the source directory, destination directory, server user, server IP, and server service name.
+1. Edit the environment file to specify the source directory, destination directory, server user, server IP, and server service name.
 2. Run the script by double-clicking `phoenix-server-deploy.bat` or executing it in the command prompt.
 3. Monitor the output for successful completion or any error messages.
 
