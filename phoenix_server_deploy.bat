@@ -99,6 +99,12 @@ echo [Install]
 echo WantedBy=multi-user.target
 ) > %SERVICE_FILE%
 
+echo Downloading setup.sh from GitHub...
+ssh -i %SSH_KEY% %SSH_USERNAME%@%SERVER_ADDRESS% "sudo wget -O /root/phoenix_server_setup.sh https://raw.githubusercontent.com/royokello/phoenix-server-setup/main/phoenix_server_setup.sh; sudo chmod +x /root/phoenix_server_setup.sh"
+
+echo Running setup script...
+ssh -i %SSH_KEY% %SSH_USERNAME%@%SERVER_ADDRESS% "sudo bash /root/setup.sh %PROJECT_NAME%"
+
 echo Stopping existing service on server...
 ssh -i %SSH_KEY% %SSH_USERNAME%@%SERVER_ADDRESS% "systemctl stop %PROJECT_NAME%.service"
 
