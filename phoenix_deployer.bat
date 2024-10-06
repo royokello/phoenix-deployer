@@ -117,6 +117,29 @@ set "SERVICE_PATH=/etc/systemd/system/%SERVICE_FILE%"
 set "TEMP_DIR=%PROJECT_NAME%_temp"
 set "ZIP_FILE=%PROJECT_NAME%.tar.gz"
 
+:: Create the service file locally
+call :Log "Creating service file '%SERVICE_FILE%' locally..."
+echo [Unit]> "%SERVICE_FILE%"
+echo Description=Phoenix Service for %PROJECT_NAME%>> "%SERVICE_FILE%"
+echo After=network.target>> "%SERVICE_FILE%"
+echo.>> "%SERVICE_FILE%"
+echo [Service]>> "%SERVICE_FILE%"
+echo User=root>> "%SERVICE_FILE%"
+echo WorkingDirectory=%APP_DIR%>> "%SERVICE_FILE%"
+echo ExecStart=/bin/bash -c \"%COMMAND%\" >> "%SERVICE_FILE%"
+echo Restart=always>> "%SERVICE_FILE%"
+echo RestartSec=5>> "%SERVICE_FILE%"
+echo SyslogIdentifier=%PROJECT_NAME%>> "%SERVICE_FILE%"
+echo.>> "%SERVICE_FILE%"
+echo [Install]>> "%SERVICE_FILE%"
+echo WantedBy=multi-user.target>> "%SERVICE_FILE%"
+
+if errorlevel 1 (
+    echo "Error: Failed to create service file '%SERVICE_FILE%' locally." | call :Log
+    exit /b 1
+)
+call :Log "Service file created successfully."
+
 :: Create temporary directory
 call :Log "Creating temporary directory '%TEMP_DIR%'..."
 mkdir "%TEMP_DIR%"
@@ -145,10 +168,10 @@ if errorlevel 1 (
 call :Log "Files packed successfully."
 
 :: Download setup.sh from GitHub
-call :Log "Downloading 'phoenix_server_setup.sh' from GitHub..."
-ssh -i "%SSH_KEY%" "%SSH_USERNAME%@%SERVER_ADDRESS%" "sudo wget -O /root/phoenix_server_setup.sh https://raw.githubusercontent.com/royokello/phoenix-server-setup/main/phoenix_server_setup.sh && sudo chmod +x /root/phoenix_server_setup.sh"
+call :Log "Downloading 'phoenix_setup.sh' from GitHub..."
+ssh -i "%SSH_KEY%" "%SSH_USERNAME%@%SERVER_ADDRESS%" "sudo wget -O /root/phoenix_setup.sh https://raw.githubusercontent.com/royokello/phoenix-setup/main/phoenix_setup.sh && sudo chmod +x /root/phoenix_setup.sh"
 if errorlevel 1 (
-    echo "Error: Failed to download or set permissions for 'phoenix_server_setup.sh'." | call :Log
+    echo "Error: Failed to download or set permissions for 'phoenix_setup.sh'." | call :Log
     exit /b 1
 )
 call :Log "'phoenix_server_setup.sh' downloaded and permissions set."
